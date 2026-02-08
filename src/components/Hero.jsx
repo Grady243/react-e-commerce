@@ -5,30 +5,29 @@ import hero from "../assets/heroimg1.png";
 function Hero() {
   return (
     <div
-      className="w-full h-screen bg-cover  flex items-center"
+      className="w-full h-screen bg-cover px-24 flex items-center"
       style={{
         backgroundImage: `url(${hero})`,
       }}
     >
       <div className="ml-16 text-center">
-  {/* Stylish avec lignes gauche / droite */}
-  <div className="flex items-center gap-4">
-    <span className="flex-1 h-px bg-black"></span>
+        {/* Stylish avec lignes gauche / droite */}
+        <div className="flex items-center gap-4">
+          <span className="flex-1 h-px bg-black"></span>
 
-    <p className="text-xl uppercase tracking-wide font-bold whitespace-nowrap">
-      Stylish
-    </p>
+          <p className="text-xl uppercase tracking-wide font-bold whitespace-nowrap">
+            Stylish
+          </p>
 
-    <span className="flex-1 h-px bg-black"></span>
-  </div>
+          <span className="flex-1 h-px bg-black"></span>
+        </div>
 
-  <h1 className="text-8xl my-2">Male Clothes</h1>
+        <h1 className="text-8xl my-2">Male Clothes</h1>
 
-  <p className="mb-6">30% off Summer Vacation</p>
+        <p className="mb-6">30% off Summer Vacation</p>
 
-  <Button text="SHOP NOW" />
-</div>
-
+        <Button text="SHOP NOW" />
+      </div>
     </div>
   );
 }

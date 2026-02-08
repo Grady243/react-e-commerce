@@ -3,9 +3,9 @@ import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 
 const Header = () => {
   return (
-    <header className="w-full font-sans">
+    <header className=" w-full font-sans">
       {/* Main header */}
-      <div className="flex items-center justify-between px-[60px] py-6">
+      <div className="flex items-center justify-between px-24 py-6">
         {/* Logo */}
         <div className="text-[28px] font-bold">Flone.</div>
 
