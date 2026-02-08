@@ -5,7 +5,7 @@ import { LuCircleDollarSign } from "react-icons/lu";
 
 function FeatureBar() {
   return (
-    <div className="w-full bg-gray-100 py-16 px-24 flex justify-center items-center gap-8 text-center border-t border-b border-gray-300">
+    <div className="w-full bg-white py-16 px-24 flex justify-center items-center gap-8 text-center ">
 
       <div className="w-[30%] flex flex-col items-center px-4">
         <LiaShippingFastSolid className="text-gray-900 text-5xl mb-2" />
