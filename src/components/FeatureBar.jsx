@@ -7,6 +7,7 @@ function FeatureBar() {
   return (
     <div className="w-full bg-white py-16 px-24 flex justify-center items-center gap-8 text-center ">
 
+
       <div className="w-[30%] flex flex-col items-center px-4">
         <LiaShippingFastSolid className="text-gray-900 text-5xl mb-2" />
         <h3 className="font-bold text-lg text-gray-900">Free Shipping</h3>
