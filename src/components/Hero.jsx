@@ -15,16 +15,16 @@ function Hero() {
         <div className="flex items-center gap-4">
           <span className="flex-1 h-px bg-black"></span>
 
-          <p className="text-xl uppercase tracking-wide font-bold whitespace-nowrap">
+          <p className="text-xl uppercase  text-black tracking-wide font-bold whitespace-nowrap">
             Stylish
           </p>
 
           <span className="flex-1 h-px bg-black"></span>
         </div>
 
-        <h1 className="text-8xl my-2">Male Clothes</h1>
+        <h1 className="text-7xl text-black my-2">Fashion Collection</h1>
 
-        <p className="mb-6">30% off Summer Vacation</p>
+        <p className="mb-6  text-black">30% off Summer Vacation</p>
 
         <Button text="SHOP NOW" />
       </div>
