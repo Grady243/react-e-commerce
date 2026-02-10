@@ -10,7 +10,6 @@ const ArrivalCard = ({ image, name, price }) => {
 
       {/* Nom du produit */}
       <h3 className="mt-4 text-sm font-semibold text-gray-800">{name}</h3>
-
       {/* Prix */}
       <p className="mt-2 text-gray-600 font-medium">${price}</p>
     </div>
