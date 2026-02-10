@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
-    <footer className="bg-[#e3e9fa] py-16 text-gray-700 font-sans">
-    
+
+    <footer className="bg-[#f8f8f8] py-16 text-gray-700 font-sans">
       <div className="px-24 py-10">
 
         <div className="flex justify-between ">
