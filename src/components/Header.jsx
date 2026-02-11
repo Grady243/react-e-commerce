@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FiSearch, FiUser, FiHeart, FiShoppingCart } from "react-icons/fi";
 
 const Header = () => {
   return (
-    <header className=" w-full font-sans">
+    <header className="w-full font-sans">
       {/* Main header */}
       <div className="flex items-center justify-between px-24 py-6">
         {/* Logo */}
@@ -12,12 +13,41 @@ const Header = () => {
         {/* Navigation */}
         <nav>
           <ul className="flex gap-8 text-[15px] font-medium">
-            <li className="cursor-pointer">Home</li>
-            <li className="cursor-pointer">Shop</li>
-            <li className="cursor-pointer">Collection</li>
-            <li className="cursor-pointer">Blog</li>
-            <li className="cursor-pointer">About</li>
-            <li className="cursor-pointer">Contact</li>
+            <li>
+              <Link to="/" className="cursor-pointer hover:text-gray-500">
+                Home
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/shop" className="cursor-pointer hover:text-gray-500">
+                Shop
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/collection" className="cursor-pointer hover:text-gray-500">
+                Collection
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/blog" className="cursor-pointer hover:text-gray-500">
+                Blog
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/about" className="cursor-pointer hover:text-gray-500">
+                About
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/contact" className="cursor-pointer hover:text-gray-500">
+                Contact
+              </Link>
+            </li>
           </ul>
         </nav>
 
