@@ -1,9 +1,9 @@
 function Shop() {
   return (
-    <div>
-      <h1>Shop Page</h1>
-      <p>This is the shop page.</p>
-    </div>
+    <div className="h-screen">
+      <p className="text-center m-auto text-9xl">This is the shop page.</p>
+
+
   );
 }
 

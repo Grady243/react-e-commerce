@@ -2,6 +2,7 @@ import React from 'react'
 import Hero from './Hero'
 import FeatureBar from './FeatureBar';
 import ArrivalSection from './ArrivalSection';
+import Blog from './Blog';
 
 
 function Main() {
@@ -10,7 +11,7 @@ function Main() {
       <Hero></Hero>
       <FeatureBar></FeatureBar>
       <ArrivalSection></ArrivalSection>
-
+      <Blog></Blog>
     </div>
   )
 }
