@@ -116,7 +116,6 @@ function Shop() {
       </div>
 
     </div>
-
   );
 }
 
