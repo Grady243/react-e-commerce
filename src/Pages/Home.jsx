@@ -7,7 +7,7 @@ function Home() {
   return (
     <div>
       <Main></Main>
-
+    </div>
   );
 }
 
