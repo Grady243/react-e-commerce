@@ -2,13 +2,13 @@ import React from "react";
 
 const BlogSection = () => {
   return (
-    <section className="w-full py-20 bg-white">
+    <section className="w-full py-20 bg-white dark:bg-gray-900">
       {/* Title */}
       <div className="text-center mb-12">
-        <h2 className="text-2xl font-semibold tracking-wide">
-          <span className="inline-block w-10 h-px bg-black align-middle mr-3"></span>
+        <h2 className="text-2xl font-semibold tracking-wide text-gray-900 dark:text-white">
+          <span className="inline-block w-10 h-px bg-black dark:bg-gray-600 align-middle mr-3"></span>
           OUR BLOG
-          <span className="inline-block w-10 h-px bg-black align-middle ml-3"></span>
+          <span className="inline-block w-10 h-px bg-black dark:bg-gray-600 align-middle ml-3"></span>
         </h2>
       </div>
 
@@ -26,11 +26,11 @@ const BlogSection = () => {
               className="w-full h-[250px]  object-cover"
             />
           </div>
-         <h3 className="text-base font-semibold leading-tight mt-4 mb-1">
+         <h3 className="text-base font-semibold leading-tight mt-4 mb-1 text-gray-900 dark:text-white">
 
             Top Fashion Trends to Watch This Season
           </h3>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
 By Shop Admin</p>
         </div>
 
@@ -46,11 +46,11 @@ By Shop Admin</p>
               className="w-full h-[250px] object-cover"
             />
           </div>
-          <h3 className="text-base font-semibold leading-tight mt-4 mb-1">
+          <h3 className="text-base font-semibold leading-tight mt-4 mb-1 text-gray-900 dark:text-white">
 
             Your Outfit for Everyday Wear
           </h3>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
 By Store Team</p>
         </div>
 
@@ -66,11 +66,11 @@ By Store Team</p>
               className="w-full h-[250px] object-cover"
             />
           </div>
-          <h3 className="text-base font-semibold leading-tight mt-4 mb-1">
+          <h3 className="text-base font-semibold leading-tight mt-4 mb-1 text-gray-900 dark:text-white">
 
             Accessories That Elevate Your Look
           </h3>
-         <p className="text-xs text-gray-400">
+         <p className="text-xs text-gray-600 dark:text-gray-400">
 By Editorial Team</p>
         </div>
       </div>
