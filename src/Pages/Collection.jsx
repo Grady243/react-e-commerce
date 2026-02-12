@@ -84,8 +84,4 @@ function Collection() {
         </div>
       </div>
 
-    </div>
-  );
-}
-
 export default Collection;
