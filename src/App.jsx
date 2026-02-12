@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -19,12 +18,11 @@ import Login from "./Login"
 import Register from "./Register"
 import Logout from "./Logout"
 
+
 function App() {
   return (
     <Router>
       <Header />
-
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
