@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -16,6 +15,10 @@ function App() {
   return (
     <Router>
       <Header />
+<<<<<<< HEAD
+=======
+
+>>>>>>> ec46929723db7b144ebecefa9718cfa36cc5f80c
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
