@@ -6,78 +6,63 @@ import favoritesService from "../services/favoritesService";
 import memberService from "../Modules/Member/memberService";
 import { useTheme } from "../context/ThemeContext";
 
-// Header professionnel amélioré :
-// - Barre fixe (ne bouge pas au scroll)
-// - Recherche fonctionnelle (ouvre un panneau de recherche)
-// - Bouton Profil → redirige vers /login ou affiche le profil si connecté
-// - Bouton Favoris → affiche le nombre d'articles favoris
-// - Bouton Panier → affiche le nombre d'articles + badge
-// - Toggle thème clair/sombre (respecte préférence système)
-// - Menu mobile réactif
 const Header = () => {
   const { isDark, toggleTheme } = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [searchActive, setSearchActive] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userAvatar, setUserAvatar] = useState(null)
-  const [cartCount, setCartCount] = useState(0)
-  const [favCount, setFavCount] = useState(0)
-  const searchInputRef = useRef(null)
-  const navigate = useNavigate()
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userAvatar, setUserAvatar] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
+  const [favCount, setFavCount] = useState(0);
+  const searchInputRef = useRef(null);
+  const navigate = useNavigate();
+  const headerHeight = 72;
 
-  // Charger le panier, favoris, et statut auth
   useEffect(() => {
     const updateState = () => {
-      setCartCount(cartService.getCart().length)
-      setFavCount(favoritesService.getFavorites().length)
-      const auth = memberService.isAuthenticated()
-      setIsAuthenticated(auth)
+      setCartCount(cartService.getCart().length);
+      setFavCount(favoritesService.getFavorites().length);
+      const auth = memberService.isAuthenticated();
+      setIsAuthenticated(auth);
       if (auth) {
-        const profile = memberService.getProfile()
+        const profile = memberService.getProfile();
         if (profile?.name) {
-          setUserAvatar(profile.name.charAt(0).toUpperCase())
+          setUserAvatar(profile.name.charAt(0).toUpperCase());
         }
       }
-    }
-    updateState()
-    // Ré-évaluer l'état toutes les 500ms (simple poll pour démo)
-    const interval = setInterval(updateState, 500)
-    return () => clearInterval(interval)
-  }, [])
+    };
+    updateState();
+    const interval = setInterval(updateState, 500);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Focus sur l'input de recherche quand il s'active
   useEffect(() => {
     if (searchActive && searchInputRef.current) {
-      searchInputRef.current.focus()
+      searchInputRef.current.focus();
     }
-  }, [searchActive])
+  }, [searchActive]);
 
-  // Gestion de la recherche en temps réel
-  function handleSearchChange(e) {
-    const query = e.target.value
-    setSearchQuery(query)
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
     if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query)}`)
+      navigate(`/shop?search=${encodeURIComponent(query)}`);
     }
-  }
+  };
 
-  // Fermer la recherche
-  function closeSearch() {
-    setSearchActive(false)
-    setSearchQuery('')
-  }
+  const closeSearch = () => {
+    setSearchActive(false);
+    setSearchQuery("");
+  };
 
-  // Gestion du bouton Profil
-  function handleProfileClick() {
+  const handleProfileClick = () => {
     if (isAuthenticated) {
-      navigate('/member/profile')
+      navigate("/member/profile");
     } else {
-      navigate('/login')
+      navigate("/login");
     }
-  }
-
-  const headerHeight = 72 // px
+  };
 
   return (
     <>
@@ -85,37 +70,28 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-24">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
-            <div className="text-[22px] md:text-[28px] font-bold cursor-pointer" onClick={() => navigate('/')}>
+            <div
+              className="text-[22px] md:text-[28px] font-bold cursor-pointer"
+              onClick={() => navigate("/")}
+            >
               Flone.
             </div>
 
             {/* Desktop nav */}
             <nav className="hidden md:block">
-              <ul className="flex gap-6 text-[15px] font-medium text-gray-700 dark:text-gray-200">
-                <li>
-                  <Link to="/" className="hover:text-gray-500">Home</Link>
-                </li>
-                <li>
-                  <Link to="/shop" className="hover:text-gray-500">Shop</Link>
-                </li>
-                <li>
-                  <Link to="/collection" className="hover:text-gray-500">Collection</Link>
-                </li>
-                <li>
-                  <Link to="/blog" className="hover:text-gray-500">Blog</Link>
-                </li>
-                <li>
-                  <Link to="/about" className="hover:text-gray-500">About</Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="hover:text-gray-500">Contact</Link>
-                </li>
+              <ul className="flex gap-6 text-[16px] font-medium text-gray-900 dark:text-gray-200">
+                <li><Link to="/" className="hover:text-gray-500">Home</Link></li>
+                <li><Link to="/shop" className="hover:text-gray-500">Shop</Link></li>
+                <li><Link to="/collection" className="hover:text-gray-500">Collection</Link></li>
+                <li><Link to="/blog" className="hover:text-gray-500">Blog</Link></li>
+                <li><Link to="/about" className="hover:text-gray-500">About</Link></li>
+                <li><Link to="/contact" className="hover:text-gray-500">Contact</Link></li>
               </ul>
             </nav>
 
             {/* Actions */}
             <div className="flex items-center gap-3 text-[20px]">
-              {/* Bouton/Champ Recherche */}
+              {/* Recherche */}
               {!searchActive ? (
                 <button
                   onClick={() => setSearchActive(true)}
@@ -146,7 +122,7 @@ const Header = () => {
                 </div>
               )}
 
-              {/* Bouton Profil (connecté ou login) */}
+              {/* Profil */}
               <button
                 onClick={handleProfileClick}
                 aria-label="Profil"
@@ -161,7 +137,7 @@ const Header = () => {
                 )}
               </button>
 
-              {/* Bouton Favoris */}
+              {/* Favoris */}
               <Link
                 to="/favoris"
                 aria-label="Favoris"
@@ -175,7 +151,7 @@ const Header = () => {
                 )}
               </Link>
 
-              {/* Bouton Panier */}
+              {/* Panier */}
               <Link
                 to="/panier"
                 aria-label="Panier"
@@ -189,7 +165,7 @@ const Header = () => {
                 )}
               </Link>
 
-              {/* Toggle thème */}
+              {/* Thème */}
               <button
                 onClick={() => toggleTheme()}
                 aria-label="Toggle theme"
@@ -211,61 +187,21 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Placeholder pour l'espace du header fixe */}
+      {/* Placeholder */}
       <div style={{ height: `${headerHeight}px` }} aria-hidden="true" />
 
-      {/* Menu mobile */}
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 shadow-sm fixed top-[72px] left-0 right-0 z-40 max-h-96 overflow-y-auto">
           <div className="px-4 py-3 space-y-2">
-            <Link
-              to="/"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              Home
-            </Link>
-            <Link
-              to="/shop"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              Shop
-            </Link>
-            <Link
-              to="/collection"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              Collection
-            </Link>
-            <Link
-              to="/blog"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              Blog
-            </Link>
-            <Link
-              to="/about"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 hover:text-indigo-600"
-            >
-              Contact
-            </Link>
+            <Link to="/" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">Home</Link>
+            <Link to="/shop" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">Shop</Link>
+            <Link to="/collection" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">Collection</Link>
+            <Link to="/blog" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">Blog</Link>
+            <Link to="/about" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">About</Link>
+            <Link to="/contact" onClick={() => setMobileOpen(false)} className="block py-2 hover:text-indigo-600">Contact</Link>
             {!isAuthenticated && (
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="block py-2 font-medium mt-4 text-indigo-600"
-              >
+              <Link to="/login" onClick={() => setMobileOpen(false)} className="block py-2 font-medium mt-4 text-indigo-600">
                 Se connecter
               </Link>
             )}

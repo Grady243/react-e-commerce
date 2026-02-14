@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
-function Button({text}) {
+function Button({ text }) {
   return (
-    <button className="px-10 py-3  font-medium text-black bg-transparent border-2 border-black cursor-pointer ">
-    {text}
-  </button>
-  )
+    <button className="px-10 py-3 font-medium text-white bg-transparent border border-white hover:bg-white hover:text-black transition  duration-500">
+      {text}
+    </button>
+  );
 }
 
-export default Button
+export default Button;
