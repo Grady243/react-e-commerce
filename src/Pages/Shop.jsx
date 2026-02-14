@@ -16,15 +16,14 @@ export default function Shop() {
   const [categories, setCategories] = useState([]);
   const [showFilters, setShowFilters] = useState(true);
 
-  // Charger les catégories au montage
+  // Charger les catégories
   useEffect(() => {
     const cats = productService.getCategories();
     setCategories(cats);
   }, []);
 
-  // Appliquer les filtres
+  // Appliquer filtres
   useEffect(() => {
-    // Sécurité : éviter min > max
     const safeMin = Math.min(minPrice, maxPrice);
     const safeMax = Math.max(minPrice, maxPrice);
 
@@ -38,7 +37,6 @@ export default function Shop() {
     setProducts(filtered);
   }, [searchQuery, selectedCategory, minPrice, maxPrice]);
 
-  // Réinitialiser filtres
   function resetFilters() {
     setSearchQuery("");
     setSelectedCategory("");
@@ -50,15 +48,14 @@ export default function Shop() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 h-[30vh] flex justify-center items-center">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-800 dark:text-white text-center">
-            Our Shop
-          </h1>
-        </div>
+        <h1 className="text-6xl md:text-7xl font-bold text-gray-800 dark:text-white">
+          Our Shop
+        </h1>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
           {/* Sidebar filtres */}
           <div className={`lg:block ${showFilters ? "block" : "hidden"}`}>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-24">
@@ -68,7 +65,7 @@ export default function Shop() {
 
               {/* Recherche */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
                   Recherche
                 </label>
                 <input
@@ -76,19 +73,19 @@ export default function Shop() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Nom ou description..."
-                  className="w-full px-3 py-2 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
                 />
               </div>
 
               {/* Catégorie */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
                   Catégorie
                 </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
                 >
                   <option value="">Tous</option>
                   {categories.map((cat) => (
@@ -101,42 +98,38 @@ export default function Shop() {
 
               {/* Prix */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
                   Prix : {minPrice}€ - {maxPrice}€
                 </label>
-
-                <div className="space-y-3">
-                  <input
-                    type="range"
-                    min="0"
-                    max="300"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(Number(e.target.value))}
-                    className="w-full"
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max="300"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="300"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(Number(e.target.value))}
+                  className="w-full mb-2"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="300"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  className="w-full"
+                />
               </div>
 
               <button
                 onClick={resetFilters}
-                className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition text-sm font-medium"
+                className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition text-sm"
               >
-                Réinitialiser les filtres
+                Réinitialiser
               </button>
             </div>
           </div>
 
           {/* Produits */}
           <div className="lg:col-span-3">
-            {/* Toggle filtres mobile */}
             <div className="lg:hidden mb-6">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -168,6 +161,7 @@ export default function Shop() {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>
