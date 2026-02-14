@@ -61,9 +61,9 @@ const ArrivalCard = ({ id, image, name, price, description = "" }) => {
   }
 
   return (
-    <div className="flex flex-col items-start bg-white group relative">
+    <div className="flex flex-col items-start bg-white  dark:bg-gray-900 group relative">
       {/* Image container avec bouton favoris */}
-      <div className="w-full h-56 p-5 bg-[#DCD7D4] flex items-center justify-center rounded-lg overflow-hidden relative">
+      <div className="w-full h-56 p-5 bg-[#DCD7D4] dark:bg-gray-800 flex items-center justify-center rounded-lg overflow-hidden relative">
         <img src={image} alt={name} className="h-full object-contain" />
         
         {/* Bouton Favoris (coeur) */}
@@ -71,8 +71,8 @@ const ArrivalCard = ({ id, image, name, price, description = "" }) => {
           onClick={handleToggleFavorite}
           className={`absolute top-3 right-3 p-2 rounded-full transition ${
             isFavorite
-              ? "bg-red-500 text-white"
-              : "bg-white text-gray-800 hover:bg-red-100"
+              ? "bg-red-600 text-white"
+              : "bg-white  text-gray-800 hover:bg-red-100"
           }`}
           aria-label="Ajouter aux favoris"
         >
@@ -81,24 +81,24 @@ const ArrivalCard = ({ id, image, name, price, description = "" }) => {
       </div>
 
       {/* Nom du produit */}
-      <h3 className="mt-4 text-sm font-semibold text-gray-800 line-clamp-2">
+      <h3 className="mt-4 text-sm font-semibold text-gray-800 dark:text-white line-clamp-2">
         {name}
       </h3>
 
       {/* Prix */}
-      <p className="mt-2 text-gray-600 font-medium">€ {price.toFixed(2)}</p>
+      <p className="mt-2 text-gray-600 dark:text-white  font-medium">€ {price.toFixed(2)}</p>
 
       {/* Bouton Ajouter au panier */}
       <button
         onClick={handleAddToCart}
-        className={`mt-3 w-full px-4 py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+        className={`mt-3 w-full px-4 py-3 rounded-full font-medium transition flex items-center justify-center gap-2 ${
           addedToCart
             ? "bg-green-500 text-white"
             : "bg-indigo-600 text-white hover:bg-indigo-700"
         }`}
       >
         <FiShoppingCart size={16} />
-        {addedToCart ? "Ajouté!" : "Ajouter"}
+        {addedToCart ? "Added!" : "Add to Chart"}
       </button>
 
       {/* Bouton Avis (visible seulement si connecté) */}

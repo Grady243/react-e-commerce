@@ -91,7 +91,7 @@ const Header = () => {
 
             {/* Desktop nav */}
             <nav className="hidden md:block">
-              <ul className="flex gap-6 text-[15px] font-medium text-gray-700 dark:text-gray-200">
+              <ul className="flex gap-6 text-[16px] font-medium text-gray-900 dark:text-gray-200">
                 <li>
                   <Link to="/" className="hover:text-gray-500">Home</Link>
                 </li>
@@ -114,7 +114,7 @@ const Header = () => {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-3 text-[20px]">
+            <div className="flex items-center gap-1 text-[20px]">
               {/* Bouton/Champ Recherche */}
               {!searchActive ? (
                 <button
