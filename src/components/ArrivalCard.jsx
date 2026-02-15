@@ -81,7 +81,7 @@ const ArrivalCard = ({ id, image, name, price, description = "" }) => {
       </div>
 
       {/* Nom du produit */}
-      <h3 className="mt-4 text-sm font-semibold text-gray-800 dark:text-white line-clamp-2">
+      <h3 className="mt-4  text-sm font-semibold text-gray-800 dark:text-white line-clamp-2">
         {name}
       </h3>
 
