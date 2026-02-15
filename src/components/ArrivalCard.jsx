@@ -5,58 +5,56 @@ import cartService from "../services/cartService";
 import favoritesService from "../services/favoritesService";
 import memberService from "../Modules/Member/memberService";
 
-// Carte produit améliorée
-// - Affiche image, nom, prix
-// - Bouton coeur pour ajouter/retirer des favoris
-// - Bouton "Ajouter au panier" pour la commande
-// - Bouton "Avis" pour écrire un avis (si connecté)
 const ArrivalCard = ({ id, image, name, price, description = "" }) => {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Vérifier au montage si le produit est en favoris et si utilisateur est connecté
   useEffect(() => {
     setIsFavorite(favoritesService.isFavorite(id));
     setIsAuthenticated(memberService.isAuthenticated());
   }, [id]);
 
-  // Basculer le statut favoris
   function handleToggleFavorite(e) {
     e.preventDefault();
-    const updated = favoritesService.toggleFavorite({
+    favoritesService.toggleFavorite({
       id,
       name,
       price,
       image,
-      description
+      description,
     });
     setIsFavorite(favoritesService.isFavorite(id));
   }
 
-  // Ajouter au panier
   function handleAddToCart(e) {
     e.preventDefault();
-    cartService.addToCart({
-      id,
-      name,
-      price,
-      image,
-      description
-    }, 1);
+    cartService.addToCart(
+      {
+        id,
+        name,
+        price,
+        image,
+        description,
+      },
+      1
+    );
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   }
 
-  // Naviguer vers le formulaire d'avis
   function handleWriteReview() {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
-    // Stock le produit actuel dans sessionStorage pour le formulaire d'avis
-    sessionStorage.setItem("reviewProduct", JSON.stringify({ id, name }));
+
+    sessionStorage.setItem(
+      "reviewProduct",
+      JSON.stringify({ id, name })
+    );
+
     navigate("/member/reviews");
   }
 
