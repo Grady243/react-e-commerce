@@ -1,344 +1,165 @@
+import React, { useState, useEffect } from "react";
+import { getProducts } from "../services/api";
+import ArrivalCard from "../components/ArrivalCard";
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { FiFilter } from 'react-icons/fi';
-import ArrivalCard from '../components/ArrivalCard';
-import productService from '../services/productService';
-
-// Page Shop complète avec filtres et recherche
-// Utilisateur peut filtrer par :
-// - Texte libre (nom/description)
-// - Catégorie
-// - Gamme de prix
 export default function Shop() {
-  const [searchParams] = useSearchParams();
-  const initialQuery = searchParams.get('search') || '';
-
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(300);
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [showFilters, setShowFilters] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Charger les catégories et produits au montage
+  // 🔹 États des filtres
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+
+  // 🔹 Toggle affichage filtres (pour mobile)
+  const [showFilters, setShowFilters] = useState(false);
+
+  // 🔹 Charger les produits
   useEffect(() => {
-    setCategories(productService.getCategories());
-    handleFilterChange();
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getProducts();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
   }, []);
 
-  // Appliquer les filtres
-  function handleFilterChange() {
-    const filtered = productService.advancedSearch(
-      searchQuery,
-      selectedCategory,
-      minPrice,
-      maxPrice
-    );
-    setProducts(filtered);
+  // 🔹 Extraire catégories uniques
+  const categories = [...new Set(products.map((p) => p.category))];
+
+  // 🔹 Appliquer filtres
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "" || product.category === selectedCategory;
+    const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
+
+  // 🔹 Réinitialiser filtres
+  function resetFilters() {
+    setSearchQuery("");
+    setSelectedCategory("");
+    setMinPrice(0);
+    setMaxPrice(1000);
   }
 
-  // Réappliquer les filtres quand les paramètres changent
-  useEffect(() => {
-    handleFilterChange();
-  }, [searchQuery, selectedCategory, minPrice, maxPrice]);
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-6 md:px-24">
       {/* Header */}
-      <div className="bg-white border-b py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-4xl font-bold text-gray-800">Shop</h1>
-          <p className="text-gray-600 mt-2">{products.length} produits trouvés</p>
-        </div>
-      </div>
+      <h1 className="text-4xl md:text-5xl font-bold text-center mb-10 text-gray-800 dark:text-white">
+        Our Shop
+      </h1>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Panneau de filtres (sidebar) */}
-          <div className={`lg:block ${showFilters ? 'block' : 'hidden'}`}>
-            <div className="bg-white rounded-lg shadow p-6 sticky top-24">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <FiFilter /> Filtres
-              </h2>
+      {/* Sidebar filtres */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className={`lg:block ${showFilters ? "block" : "hidden"}`}>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-24">
+            <h2 className="text-lg font-semibold mb-6 text-gray-800 dark:text-white">
+              Filtres
+            </h2>
 
-              {/* Recherche */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Nom ou description..."
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                />
-              </div>
-
-              {/* Catégories */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
-                <select
-                  value={selectedCategory}
-                  onChange={e => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                >
-                  <option value="">Tous</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Prix */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prix: {minPrice}€ - {maxPrice}€
-                </label>
-                <div className="space-y-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max="250"
-                    value={minPrice}
-                    onChange={e => setMinPrice(Number(e.target.value))}
-                    className="w-full"
-                  />
-                  <input
-                    type="range"
-                    min="0"
-                    max="250"
-                    value={maxPrice}
-                    onChange={e => setMaxPrice(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-
-              {/* Bouton Réinitialiser */}
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('');
-                  setMinPrice(0);
-                  setMaxPrice(300);
-                }}
-                className="w-full px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
-              >
-                Réinitialiser les filtres
-              </button>
+            {/* Recherche */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
+                Recherche
+              </label>
+              <input
+                type="text"
+                placeholder="Rechercher un produit..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
+              />
             </div>
+
+            {/* Catégorie */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
+                Catégorie
+              </label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700"
+              >
+                <option value="">Toutes catégories</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Prix */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-white">
+                Prix : {minPrice}€ - {maxPrice}€
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={minPrice}
+                onChange={(e) => setMinPrice(Number(e.target.value))}
+                className="w-full mb-2"
+              />
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-full"
+              />
+            </div>
+
+            <button
+              onClick={resetFilters}
+              className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+            >
+              Réinitialiser
+            </button>
           </div>
+        </div>
 
-          {/* Grille de produits */}
-          <div className="lg:col-span-3">
-            {/* Bouton afficher/masquer filtres (mobile) */}
-            <div className="lg:hidden mb-4">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2"
-              >
-                <FiFilter /> {showFilters ? 'Masquer' : 'Afficher'} filtres
-              </button>
-            </div>
-
-            {products.length === 0 ? (
-              <div className="bg-white rounded-lg shadow p-12 text-center">
-                <p className="text-gray-600">Aucun produit ne correspond à vos critères.</p>
-              </div>
+        {/* Produits */}
+        <div className="lg:col-span-3">
+          {loading && <p className="text-center">Chargement...</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
+          {!loading && !error && (
+            filteredProducts.length === 0 ? (
+              <p className="text-center text-gray-600 dark:text-gray-300">
+                Aucun produit trouvé.
+              </p>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {products.map(product => (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {filteredProducts.map((product) => (
                   <ArrivalCard
                     key={product.id}
                     id={product.id}
-                    name={product.name}
+                    name={product.title}
                     price={product.price}
                     image={product.image}
                     description={product.description}
                   />
                 ))}
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-import React from "react";
-import shopbg from "../assets/shopbg.jpg";
-import pull from "../assets/pull.png";
-import sac from "../assets/sac.png";
-import lunettes from "../assets/lunettes.png";
-
-function Shop() {
-  const products = [
-    { id: 1, name: "Premium Hoodie", price: 79.99, oldPrice: 99.99, image: pull },
-    { id: 2, name: "Street Sneakers", price: 99.99, oldPrice: 129.99, image: sac },
-    { id: 3, name: "Classic Jeans", price: 59.99, oldPrice: 79.99, image: lunettes },
-    { id: 4, name: "Urban Jacket", price: 119.99, oldPrice: 149.99, image: pull },
-    { id: 5, name: "Minimal Sneakers", price: 89.99, oldPrice: 109.99, image: sac },
-    { id: 6, name: "Summer Hoodie", price: 69.99, oldPrice: 89.99, image: lunettes },
-    { id: 7, name: "Vintage Jeans", price: 64.99, oldPrice: 84.99, image: pull },
-    { id: 8, name: "Luxury Backpack", price: 129.99, oldPrice: 159.99, image: sac },
-    { id: 9, name: "Sport Hoodie", price: 74.99, oldPrice: 94.99, image: lunettes },
-    { id: 10, name: "Classic Sneakers", price: 95.99, oldPrice: 120.99, image: pull },
-    { id: 11, name: "Denim Jacket", price: 110.99, oldPrice: 140.99, image: sac },
-    { id: 12, name: "Black Sunglasses", price: 49.99, oldPrice: 69.99, image: lunettes },
-  ];
-
-  const recommended = products.slice(0, 3);
-
-  return (
-    <div className="h-screen">
-      <p className="m-auto text-center text-9xl">This is the shop page.</p>
-    </div>
-
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-          <h1 className="text-7xl font-bold mb-6 tracking-wide">SHOP</h1>
-          <p className="text-lg max-w-2xl text-gray-200">
-            Discover timeless fashion pieces crafted for comfort and style.
-          </p>
-        </div>
-      </div>
-
-      {/* ================= PRODUCTS ================= */}
-      <div className="px-10 md:px-24 py-20">
-
-        {/* Filters */}
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl font-bold mb-8">Browse Collection</h2>
-          <div className="flex justify-center gap-8 text-gray-600 font-medium">
-            <button className="hover:text-black transition">All</button>
-            <button className="hover:text-black transition">Sneakers</button>
-            <button className="hover:text-black transition">T-Shirts</button>
-            <button className="hover:text-black transition">Hoodies</button>
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition duration-300 group"
-            >
-              <div className="overflow-hidden rounded-xl">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-              <h2 className="text-lg font-semibold mt-5">{product.name}</h2>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="text-black font-bold">${product.price}</span>
-                <span className="text-gray-400 line-through text-sm">${product.oldPrice}</span>
-              </div>
-              <button className="mt-5 w-full bg-black text-white py-2.5 rounded-xl hover:bg-gray-800 transition">
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ================= RECOMMENDATIONS ================= */}
-      <div className="px-10 md:px-24 pb-24">
-        <h2 className="text-4xl font-bold mb-14 text-center">
-          Recommended For You
-        </h2>
-
-    <div className="w-full font-sans bg-gray-50">
-
-      {/* ================= HERO ================= */}
-      <div className="relative h-[60vh] w-full">
-        <img
-          src={shopbg}
-          alt="Shop"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/50"></div>
-
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
-          <h1 className="text-7xl font-bold mb-6 tracking-wide">SHOP</h1>
-          <p className="text-lg max-w-2xl text-gray-200">
-            Discover timeless fashion pieces crafted for comfort and style.
-          </p>
-        </div>
-      </div>
-
-      {/* ================= PRODUCTS ================= */}
-      <div className="px-10 md:px-24 py-20">
-
-        {/* Filters */}
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl font-bold mb-8">Browse Collection</h2>
-          <div className="flex justify-center gap-8 text-gray-600 font-medium">
-            <button className="hover:text-black transition">All</button>
-            <button className="hover:text-black transition">Sneakers</button>
-            <button className="hover:text-black transition">T-Shirts</button>
-            <button className="hover:text-black transition">Hoodies</button>
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition duration-300 group"
-            >
-              <div className="overflow-hidden rounded-xl">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
-                />
-              </div>
-              <h2 className="text-lg font-semibold mt-5">{product.name}</h2>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="text-black font-bold">${product.price}</span>
-                <span className="text-gray-400 line-through text-sm">${product.oldPrice}</span>
-              </div>
-              <button className="mt-5 w-full bg-black text-white py-2.5 rounded-xl hover:bg-gray-800 transition">
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ================= RECOMMENDATIONS ================= */}
-      <div className="px-10 md:px-24 pb-24">
-        <h2 className="text-4xl font-bold mb-14 text-center">
-          Recommended For You
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {recommended.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-3xl p-6 shadow-md hover:shadow-2xl transition duration-300"
-            >
-              <div className="overflow-hidden rounded-2xl">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-80 object-cover hover:scale-105 transition duration-500"
-                />
-              </div>
-              <h2 className="text-2xl font-semibold mt-6">{product.name}</h2>
-              <div className="flex items-center gap-4 mt-3">
-                <span className="text-xl font-bold text-black">${product.price}</span>
-                <span className="text-gray-400 line-through">${product.oldPrice}</span>
-              </div>
-              <button className="mt-6 w-full bg-black text-white py-3 rounded-2xl hover:bg-gray-800 transition">
-                Add to Cart
-              </button>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </div>
     </div>
   );
 }
-
